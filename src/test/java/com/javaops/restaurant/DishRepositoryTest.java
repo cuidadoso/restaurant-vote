@@ -33,8 +33,8 @@ public class DishRepositoryTest {
                         .getId();
         id2 = repository.save(dish2)
                         .getId();
-        assertThat(dish1).isNotNull();
-        assertThat(dish2).isNotNull();
+        assertThat(repository.findById(id1)).isNotNull();
+        assertThat(repository.findById(id2)).isNotNull();
     }
 
     @Test
