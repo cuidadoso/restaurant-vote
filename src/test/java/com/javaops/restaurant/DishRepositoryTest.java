@@ -45,8 +45,7 @@ public class DishRepositoryTest {
                           .contains(tuple("Soup Tomato", 1000L),
                                     tuple("Potato Free", 900L));
 
-        Dish dishA = repository.findByName("Soup Tomato")
-                               .get(0);
+        Dish dishA = repository.findByName("Soup Tomato");
         assertThat(dishA.getName()).isEqualTo("Soup Tomato");
         dishA.setName("Soup With Meat");
         repository.save(dishA);
@@ -60,14 +59,14 @@ public class DishRepositoryTest {
         assertThat(dishC).isNotNull();
         assertThat(dishC.getName()).as("check %s's name", dishC.getName())
                                    .isEqualTo("Soup With Meat");
-        assertThat(dishC.getPrice()).as("check %s's price", dishC.getPrice())
+        assertThat(dishC.getPrice()).as("check %s's price", dishC.getName())
                                     .isEqualTo(1000L);
 
         Dish dishD = repository.findByPrice(900L)
                                .get(0);
         assertThat(dishD.getName()).as("check %s's name", dishD.getName())
                                    .isEqualTo("Potato Free");
-        assertThat(dishD.getPrice()).as("check %s's price", dishD.getPrice())
+        assertThat(dishD.getPrice()).as("check %s's price", dishD.getName())
                                     .isEqualTo(900L);
     }
 
