@@ -23,8 +23,8 @@ import static org.assertj.core.api.Assertions.tuple;
 public class MenuRepositoryTest {
     private final String RESTAURANT_ID_1 = "111111";
     private final String RESTAURANT_ID_2 = "222222";
-    private final LocalDate DATE_1 = LocalDate.now();
-    private final LocalDate DATE_2 = DATE_1.minusDays(1);
+    private final LocalDate DATE_TODAY = LocalDate.now();
+    private final LocalDate DATE_YESTERDAY = DATE_TODAY.minusDays(1);
 
     @Autowired
     private MenuRepository repository;
@@ -38,19 +38,19 @@ public class MenuRepositoryTest {
         log.info("--> Menu test start.");
         Menu menu1 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_1)
-                         .date(DATE_1)
+                         .date(DATE_TODAY)
                          .build();
         Menu menu2 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_1)
-                         .date(DATE_2)
+                         .date(DATE_YESTERDAY)
                          .build();
         Menu menu3 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_2)
-                         .date(DATE_1)
+                         .date(DATE_TODAY)
                          .build();
         Menu menu4 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_2)
-                         .date(DATE_2)
+                         .date(DATE_YESTERDAY)
                          .build();
         assertThat(menu1.getId()).isNull();
         assertThat(menu2.getId()).isNull();
@@ -80,31 +80,31 @@ public class MenuRepositoryTest {
         List<Menu> menus = repository.findAll();
         assertThat(menus).hasSize(4);
         assertThat(menus).extracting("restaurantId", "date")
-                          .contains(tuple(RESTAURANT_ID_1, DATE_1),
-                                    tuple(RESTAURANT_ID_1, DATE_2),
-                                    tuple(RESTAURANT_ID_2, DATE_1),
-                                    tuple(RESTAURANT_ID_2, DATE_2));
+                          .contains(tuple(RESTAURANT_ID_1, DATE_TODAY),
+                                    tuple(RESTAURANT_ID_1, DATE_YESTERDAY),
+                                    tuple(RESTAURANT_ID_2, DATE_TODAY),
+                                    tuple(RESTAURANT_ID_2, DATE_YESTERDAY));
 
         List<Menu> menusA = repository.findByRestaurantId(RESTAURANT_ID_1);
         assertThat(menusA).hasSize(2);
         assertThat(menusA).extracting("restaurantId", "date")
-                         .contains(tuple(RESTAURANT_ID_1, DATE_1),
-                                   tuple(RESTAURANT_ID_1, DATE_2));
+                         .contains(tuple(RESTAURANT_ID_1, DATE_TODAY),
+                                   tuple(RESTAURANT_ID_1, DATE_YESTERDAY));
 
-        List<Menu> menusB = repository.findByDate(DATE_1);
+        List<Menu> menusB = repository.findByDate(DATE_TODAY);
         assertThat(menusB).hasSize(2);
         assertThat(menusB).extracting("restaurantId", "date")
-                          .contains(tuple(RESTAURANT_ID_1, DATE_1),
-                                    tuple(RESTAURANT_ID_2, DATE_1));
+                          .contains(tuple(RESTAURANT_ID_1, DATE_TODAY),
+                                    tuple(RESTAURANT_ID_2, DATE_TODAY));
 
-        Menu menuA = repository.findByRestaurantIdAndDate(RESTAURANT_ID_1, DATE_1);
+        Menu menuA = repository.findByRestaurantIdAndDate(RESTAURANT_ID_1, DATE_TODAY);
         assertThat(menuA.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
-        assertThat(menuA.getDate()).isEqualTo(DATE_1);
+        assertThat(menuA.getDate()).isEqualTo(DATE_TODAY);
 
         Menu menuB = repository.findById(id1);
         assertThat(menuB).isNotNull();
         assertThat(menuB.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
-        assertThat(menuB.getDate()).isEqualTo(DATE_1);
+        assertThat(menuB.getDate()).isEqualTo(DATE_TODAY);
     }
 
     @After
