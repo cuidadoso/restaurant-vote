@@ -2,6 +2,7 @@ package com.javaops.restaurant;
 
 import com.javaops.restaurant.models.Dish;
 import com.javaops.restaurant.repository.DishRepository;
+import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Log
 public class DishRepositoryTest {
 
     @Autowired
@@ -25,14 +27,23 @@ public class DishRepositoryTest {
 
     @Before
     public void setUp() {
-        Dish dish1 = new Dish("Soup Tomato", 1000L);
-        Dish dish2 = new Dish("Potato Free", 900L);
+        log.info("--> Dish test start.");
+        Dish dish1 = Dish.builder()
+                         .name("Soup Tomato")
+                         .price(1000L)
+                         .build();
+        Dish dish2 = Dish.builder()
+                         .name("Potato Free")
+                         .price(900L)
+                         .build();
         assertThat(dish1.getId()).isNull();
         assertThat(dish2.getId()).isNull();
         id1 = repository.save(dish1)
                         .getId();
+        log.info("Dish has created: " + dish1);
         id2 = repository.save(dish2)
                         .getId();
+        log.info("Dish has created: " + dish2);
         assertThat(repository.findById(id1)).isNotNull();
         assertThat(repository.findById(id2)).isNotNull();
     }
@@ -73,5 +84,6 @@ public class DishRepositoryTest {
     @After
     public void tearDown() {
         repository.deleteAll();
+        log.info("--> Dish test end.");
     }
 }

@@ -2,6 +2,7 @@ package com.javaops.restaurant;
 
 import com.javaops.restaurant.models.Restaurant;
 import com.javaops.restaurant.repository.RestaurantRepository;
+import lombok.extern.java.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Log
 public class RestaurantRepositoryTest {
 
     @Autowired
@@ -26,14 +28,23 @@ public class RestaurantRepositoryTest {
 
     @Before
     public void setUp() {
-        Restaurant restaurant1 = new Restaurant("Restaurant1", "Address1");
-        Restaurant restaurant2 = new Restaurant("Restaurant2", "Address2");
+        log.info("--> Restaurant test start.");
+        Restaurant restaurant1 = Restaurant.builder()
+                                           .name("Restaurant1")
+                                           .address("Address1")
+                                           .build();
+        Restaurant restaurant2 = Restaurant.builder()
+                                           .name("Restaurant2")
+                                           .address("Address2")
+                                           .build();
         assertThat(restaurant1.getId()).isNull();
         assertThat(restaurant2.getId()).isNull();
         id1 = repository.save(restaurant1)
                         .getId();
+        log.info("Restaurant has created: " + restaurant1);
         id2 = repository.save(restaurant2)
                         .getId();
+        log.info("Restaurant has created: " + restaurant2);
         assertThat(repository.findById(id1)).isNotNull();
         assertThat(repository.findById(id2)).isNotNull();
     }
@@ -82,5 +93,6 @@ public class RestaurantRepositoryTest {
     @After
     public void tearDown() {
         repository.deleteAll();
+        log.info("--> Restaurant test end.");
     }
 }
