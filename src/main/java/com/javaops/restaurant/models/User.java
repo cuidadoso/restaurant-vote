@@ -15,12 +15,15 @@ public class User {
     private String id;
     @Getter
     @Setter
+    @NonNull
     private String name;
     @Getter
     @Setter
+    @NonNull
     private String email;
     @Getter
     @Setter
+    @NonNull
     private String password;
 
     @Builder

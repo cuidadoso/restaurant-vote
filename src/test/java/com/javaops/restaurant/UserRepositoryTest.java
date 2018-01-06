@@ -20,6 +20,12 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest
 @Log
 public class UserRepositoryTest {
+    private final String NAME_1 = "UserName1";
+    private final String EMAIL_1 = "user1@mail";
+    private final String PASSWORD_1 = "pass1";
+    private final String NAME_2 = "UserName2";
+    private final String EMAIL_2 = "user2@mail";
+    private final String PASSWORD_2 = "pass2";
 
     @Autowired
     private UserRepository repository;
@@ -30,14 +36,14 @@ public class UserRepositoryTest {
     public void setUp() {
         log.info("--> User test start.");
         User user1 = User.builder()
-                         .name("UserName1")
-                         .email("user1@mail")
-                         .password("pass1")
+                         .name(NAME_1)
+                         .email(EMAIL_1)
+                         .password(PASSWORD_1)
                          .build();
         User user2 = User.builder()
-                         .name("UserName2")
-                         .email("user2@mail")
-                         .password("pass2")
+                         .name(NAME_2)
+                         .email(EMAIL_2)
+                         .password(PASSWORD_2)
                          .build();
         assertThat(user1.getId()).isNull();
         assertThat(user2.getId()).isNull();
@@ -47,27 +53,26 @@ public class UserRepositoryTest {
         id2 = repository.save(user2)
                         .getId();
         log.info("--> User has created: " + user2);
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
     }
 
     @Test
     public void testDataUpdate() {
+        assertThat(repository.findById(id1)).isNotNull();
+        assertThat(repository.findById(id2)).isNotNull();
+
         List<User> users = repository.findAll();
         assertThat(users).hasSize(2);
         assertThat(users).extracting("name", "email", "password")
-                          .contains(tuple("UserName1", "user1@mail", "pass1"),
-                                    tuple("UserName2", "user2@mail", "pass2"));
+                          .contains(tuple(NAME_1, EMAIL_1, PASSWORD_1),
+                                    tuple(NAME_2, EMAIL_2, PASSWORD_2));
 
-        User userA = repository.findByEmail("user1@mail");
-        assertThat(userA.getName()).isEqualTo("UserName1");
-        userA.setName("UserName11");
-        repository.save(userA);
+        User userA = repository.findByEmail(EMAIL_1);
+        assertThat(userA.getName()).isEqualTo(NAME_1);
 
-        User userB = repository.findById(id1);
+        User userB = repository.findById(id2);
         assertThat(userB).isNotNull();
         assertThat(userB.getName()).as("check %s's name", userB.getName())
-                                   .isEqualTo("UserName11");
+                                   .isEqualTo(NAME_2);
     }
 
     @After

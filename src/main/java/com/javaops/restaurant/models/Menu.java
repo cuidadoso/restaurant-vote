@@ -4,11 +4,13 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="dishes")
+import java.time.LocalDate;
+
+@Document(collection="menus")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Dish {
+public class Menu {
     @Id
     @Getter
     @Setter
@@ -16,14 +18,14 @@ public class Dish {
     @Getter
     @Setter
     @NonNull
-    private String name;
+    private String restaurantId;
     @Getter
     @Setter
     @NonNull
-    private Long price;
+    private LocalDate date;
 
     @Builder
-    public Dish(final String name, final Long price) {
-        this(null, name, price);
+    public Menu(final String restaurantId, final LocalDate date) {
+        this(null, restaurantId, date);
     }
 }

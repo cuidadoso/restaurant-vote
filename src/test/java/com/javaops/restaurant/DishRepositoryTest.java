@@ -19,6 +19,12 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 @Log
 public class DishRepositoryTest {
+    private final String DISH_NAME_1 = "Soup Tomato";
+    private final String DISH_NAME_2 = "Potato Free";
+    private final String DISH_NAME_3 = "Soup With Meat";
+    private final String SEARCH_WORD = "Meat";
+    private final Long PRICE_1 = 1000L;
+    private final Long PRICE_2 = 900L;
 
     @Autowired
     private DishRepository repository;
@@ -29,12 +35,12 @@ public class DishRepositoryTest {
     public void setUp() {
         log.info("--> Dish test start.");
         Dish dish1 = Dish.builder()
-                         .name("Soup Tomato")
-                         .price(1000L)
+                         .name(DISH_NAME_1)
+                         .price(PRICE_1)
                          .build();
         Dish dish2 = Dish.builder()
-                         .name("Potato Free")
-                         .price(900L)
+                         .name(DISH_NAME_2)
+                         .price(PRICE_2)
                          .build();
         assertThat(dish1.getId()).isNull();
         assertThat(dish2.getId()).isNull();
@@ -44,41 +50,42 @@ public class DishRepositoryTest {
         id2 = repository.save(dish2)
                         .getId();
         log.info("Dish has created: " + dish2);
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
     }
 
     @Test
     public void testDataUpdate() {
+        assertThat(repository.findById(id1)).isNotNull();
+        assertThat(repository.findById(id2)).isNotNull();
+
         List<Dish> dishes = repository.findAll();
         assertThat(dishes).hasSize(2);
         assertThat(dishes).extracting("name", "price")
-                          .contains(tuple("Soup Tomato", 1000L),
-                                    tuple("Potato Free", 900L));
+                          .contains(tuple(DISH_NAME_1, PRICE_1),
+                                    tuple(DISH_NAME_2, PRICE_2));
 
-        Dish dishA = repository.findByName("Soup Tomato");
-        assertThat(dishA.getName()).isEqualTo("Soup Tomato");
-        dishA.setName("Soup With Meat");
+        Dish dishA = repository.findByName(DISH_NAME_1);
+        assertThat(dishA.getName()).isEqualTo(DISH_NAME_1);
+        dishA.setName(DISH_NAME_3);
         repository.save(dishA);
 
-        Dish dishB = repository.findByNameContains("Meat")
+        Dish dishB = repository.findByNameContains(SEARCH_WORD)
                                .get(0);
         assertThat(dishB).isNotNull();
-        assertThat(dishB.getName()).isEqualTo("Soup With Meat");
+        assertThat(dishB.getName()).isEqualTo(DISH_NAME_3);
 
         Dish dishC = repository.findById(id1);
         assertThat(dishC).isNotNull();
         assertThat(dishC.getName()).as("check %s's name", dishC.getName())
-                                   .isEqualTo("Soup With Meat");
+                                   .isEqualTo(DISH_NAME_3);
         assertThat(dishC.getPrice()).as("check %s's price", dishC.getName())
-                                    .isEqualTo(1000L);
+                                    .isEqualTo(PRICE_1);
 
-        Dish dishD = repository.findByPrice(900L)
+        Dish dishD = repository.findByPrice(PRICE_2)
                                .get(0);
         assertThat(dishD.getName()).as("check %s's name", dishD.getName())
-                                   .isEqualTo("Potato Free");
+                                   .isEqualTo(DISH_NAME_2);
         assertThat(dishD.getPrice()).as("check %s's price", dishD.getName())
-                                    .isEqualTo(900L);
+                                    .isEqualTo(PRICE_2);
     }
 
     @After

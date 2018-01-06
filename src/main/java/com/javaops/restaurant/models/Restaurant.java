@@ -15,9 +15,11 @@ public class Restaurant {
     private String id;
     @Getter
     @Setter
+    @NonNull
     private String name;
     @Getter
     @Setter
+    @NonNull
     private String address;
 
     @Builder
