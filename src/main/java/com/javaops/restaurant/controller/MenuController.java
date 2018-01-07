@@ -1,7 +1,9 @@
 package com.javaops.restaurant.controller;
 
+import com.javaops.restaurant.model.Dish;
 import com.javaops.restaurant.model.Menu;
 import com.javaops.restaurant.model.Restaurant;
+import com.javaops.restaurant.repository.DishRepository;
 import com.javaops.restaurant.repository.MenuRepository;
 import com.javaops.restaurant.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,12 +21,15 @@ import java.util.List;
 public class MenuController extends EntityController<Menu>{
     private final MenuRepository repository;
     private final RestaurantRepository restaurantRepository;
+    private final DishRepository dishRepository;
 
     @Autowired
     public MenuController(final MenuRepository repository,
-                          final RestaurantRepository restaurantRepository) {
+                          final RestaurantRepository restaurantRepository,
+                          final DishRepository dishRepository) {
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
+        this.dishRepository = dishRepository;
     }
 
     @Override
@@ -70,6 +77,24 @@ public class MenuController extends EntityController<Menu>{
         Restaurant restaurant = restaurantRepository.findOne(menu.getRestaurantId());
         if(restaurant == null) {
             throw new RuntimeException();
+        }
+        List<Dish> dishes = menu.getDishes();
+        if(dishes == null) {
+            menu.setDishes(Collections.emptyList());
+        } else {
+            List<Dish> _dishes = new ArrayList<>();
+            dishes.forEach(d -> {
+                String id = d.getId();
+                if(id == null) {
+                    _dishes.add(d);
+                } else {
+                    Dish dish = dishRepository.findOne(d.getId());
+                    if(dish == null) {
+                        throw new RuntimeException();
+                    }
+                }
+            });
+            dishRepository.save(_dishes);
         }
     }
 }

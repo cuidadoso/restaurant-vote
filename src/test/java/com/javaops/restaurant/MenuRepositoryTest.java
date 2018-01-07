@@ -1,6 +1,8 @@
 package com.javaops.restaurant;
 
+import com.javaops.restaurant.model.Dish;
 import com.javaops.restaurant.model.Menu;
+import com.javaops.restaurant.repository.DishRepository;
 import com.javaops.restaurant.repository.MenuRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
@@ -12,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,9 +29,15 @@ public class MenuRepositoryTest {
     private final String RESTAURANT_ID_2 = "222222";
     private final LocalDate DATE_TODAY = LocalDate.now();
     private final LocalDate DATE_YESTERDAY = DATE_TODAY.minusDays(1);
+    private final String DISH_NAME_1 = "Soup Tomato";
+    private final String DISH_NAME_2 = "Potato Free";
+    private final Long PRICE_1 = 1000L;
+    private final Long PRICE_2 = 900L;
 
     @Autowired
     private MenuRepository repository;
+    @Autowired
+    private DishRepository dishRepository;
     private String id1;
     private String id2;
     private String id3;
@@ -36,21 +46,41 @@ public class MenuRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> Menu test start.");
+        Dish dish1 = Dish.builder()
+                         .name(DISH_NAME_1)
+                         .price(PRICE_1)
+                         .build();
+        Dish dish2 = Dish.builder()
+                         .name(DISH_NAME_2)
+                         .price(PRICE_2)
+                         .build();
+        assertThat(dish1.getId()).isNull();
+        assertThat(dish2.getId()).isNull();
+        id1 = dishRepository.save(dish1)
+                        .getId();
+        log.info("Dish has created: " + dish1);
+        id2 = dishRepository.save(dish2)
+                        .getId();
+        log.info("Dish has created: " + dish2);
         Menu menu1 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_1)
                          .date(DATE_TODAY)
+                         .dishes(Collections.emptyList())
                          .build();
         Menu menu2 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_1)
                          .date(DATE_YESTERDAY)
+                         .dishes(Collections.emptyList())
                          .build();
         Menu menu3 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_2)
                          .date(DATE_TODAY)
+                         .dishes(Collections.emptyList())
                          .build();
         Menu menu4 = Menu.builder()
                          .restaurantId(RESTAURANT_ID_2)
                          .date(DATE_YESTERDAY)
+                         .dishes(Arrays.asList(dish1, dish2))
                          .build();
         assertThat(menu1.getId()).isNull();
         assertThat(menu2.getId()).isNull();
@@ -100,16 +130,23 @@ public class MenuRepositoryTest {
         Menu menuA = repository.findByRestaurantIdAndDate(RESTAURANT_ID_1, DATE_TODAY);
         assertThat(menuA.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
         assertThat(menuA.getDate()).isEqualTo(DATE_TODAY);
+        assertThat(menuA.getDishes()).hasSize(0);
 
-        Menu menuB = repository.findOne(id1);
+        Menu menuB = repository.findOne(id4);
         assertThat(menuB).isNotNull();
-        assertThat(menuB.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
-        assertThat(menuB.getDate()).isEqualTo(DATE_TODAY);
+        assertThat(menuB.getRestaurantId()).isEqualTo(RESTAURANT_ID_2);
+        assertThat(menuB.getDate()).isEqualTo(DATE_YESTERDAY);
+        List<Dish> dishes = menuB.getDishes();
+        assertThat(dishes).hasSize(2);
+        assertThat(dishes).extracting("name", "price")
+                          .contains(tuple(DISH_NAME_1, PRICE_1),
+                                    tuple(DISH_NAME_2, PRICE_2));
     }
 
     @After
     public void tearDown() {
         repository.deleteAll();
+        dishRepository.deleteAll();
         log.info("--> Menu test end.");
     }
 }
