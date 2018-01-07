@@ -1,6 +1,6 @@
 package com.javaops.restaurant;
 
-import com.javaops.restaurant.models.User;
+import com.javaops.restaurant.model.User;
 import com.javaops.restaurant.repository.UserRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
@@ -57,8 +57,8 @@ public class UserRepositoryTest {
 
     @Test
     public void testDataUpdate() {
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
+        assertThat(repository.findOne(id1)).isNotNull();
+        assertThat(repository.findOne(id2)).isNotNull();
 
         List<User> users = repository.findAll();
         assertThat(users).hasSize(2);
@@ -69,7 +69,7 @@ public class UserRepositoryTest {
         User userA = repository.findByEmail(EMAIL_1);
         assertThat(userA.getName()).isEqualTo(NAME_1);
 
-        User userB = repository.findById(id2);
+        User userB = repository.findOne(id2);
         assertThat(userB).isNotNull();
         assertThat(userB.getName()).as("check %s's name", userB.getName())
                                    .isEqualTo(NAME_2);

@@ -1,14 +1,16 @@
-package com.javaops.restaurant.models;
+package com.javaops.restaurant.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="restaurants")
+import java.time.LocalDate;
+
+@Document(collection="menus")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Restaurant {
+public class Menu {
     @Id
     @Getter
     @Setter
@@ -16,14 +18,14 @@ public class Restaurant {
     @Getter
     @Setter
     @NonNull
-    private String name;
+    private String restaurantId;
     @Getter
     @Setter
     @NonNull
-    private String address;
+    private LocalDate date;
 
     @Builder
-    public Restaurant(final String name, final String address) {
-        this(null, name, address);
+    public Menu(final String restaurantId, final LocalDate date) {
+        this(null, restaurantId, date);
     }
 }

@@ -1,4 +1,4 @@
-package com.javaops.restaurant.models;
+package com.javaops.restaurant.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

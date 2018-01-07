@@ -1,6 +1,6 @@
 package com.javaops.restaurant;
 
-import com.javaops.restaurant.models.Dish;
+import com.javaops.restaurant.model.Dish;
 import com.javaops.restaurant.repository.DishRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
@@ -54,8 +54,8 @@ public class DishRepositoryTest {
 
     @Test
     public void testDataUpdate() {
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
+        assertThat(repository.findOne(id1)).isNotNull();
+        assertThat(repository.findOne(id2)).isNotNull();
 
         List<Dish> dishes = repository.findAll();
         assertThat(dishes).hasSize(2);
@@ -73,7 +73,7 @@ public class DishRepositoryTest {
         assertThat(dishB).isNotNull();
         assertThat(dishB.getName()).isEqualTo(DISH_NAME_3);
 
-        Dish dishC = repository.findById(id1);
+        Dish dishC = repository.findOne(id1);
         assertThat(dishC).isNotNull();
         assertThat(dishC.getName()).as("check %s's name", dishC.getName())
                                    .isEqualTo(DISH_NAME_3);

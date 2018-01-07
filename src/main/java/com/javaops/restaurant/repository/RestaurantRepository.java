@@ -1,13 +1,11 @@
 package com.javaops.restaurant.repository;
 
-import com.javaops.restaurant.models.Restaurant;
+import com.javaops.restaurant.model.Restaurant;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
 public interface RestaurantRepository extends MongoRepository<Restaurant, String> {
-    Restaurant findById(final String id);
-
     Restaurant findByName(final String name);
 
     List<Restaurant> findByNameContains(final String name);

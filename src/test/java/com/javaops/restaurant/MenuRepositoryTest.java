@@ -1,6 +1,6 @@
 package com.javaops.restaurant;
 
-import com.javaops.restaurant.models.Menu;
+import com.javaops.restaurant.model.Menu;
 import com.javaops.restaurant.repository.MenuRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
@@ -72,10 +72,10 @@ public class MenuRepositoryTest {
 
     @Test
     public void testDataUpdate() {
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
-        assertThat(repository.findById(id3)).isNotNull();
-        assertThat(repository.findById(id4)).isNotNull();
+        assertThat(repository.findOne(id1)).isNotNull();
+        assertThat(repository.findOne(id2)).isNotNull();
+        assertThat(repository.findOne(id3)).isNotNull();
+        assertThat(repository.findOne(id4)).isNotNull();
 
         List<Menu> menus = repository.findAll();
         assertThat(menus).hasSize(4);
@@ -101,7 +101,7 @@ public class MenuRepositoryTest {
         assertThat(menuA.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
         assertThat(menuA.getDate()).isEqualTo(DATE_TODAY);
 
-        Menu menuB = repository.findById(id1);
+        Menu menuB = repository.findOne(id1);
         assertThat(menuB).isNotNull();
         assertThat(menuB.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
         assertThat(menuB.getDate()).isEqualTo(DATE_TODAY);

@@ -1,14 +1,14 @@
-package com.javaops.restaurant.models;
+package com.javaops.restaurant.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="users")
+@Document(collection="dishes")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class User {
+public class Dish {
     @Id
     @Getter
     @Setter
@@ -20,14 +20,10 @@ public class User {
     @Getter
     @Setter
     @NonNull
-    private String email;
-    @Getter
-    @Setter
-    @NonNull
-    private String password;
+    private Long price;
 
     @Builder
-    public User(final String name, final String email, final String password) {
-        this(null, name, email, password);
+    public Dish(final String name, final Long price) {
+        this(null, name, price);
     }
 }

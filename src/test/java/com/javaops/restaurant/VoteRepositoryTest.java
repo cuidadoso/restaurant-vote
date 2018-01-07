@@ -1,6 +1,6 @@
 package com.javaops.restaurant;
 
-import com.javaops.restaurant.models.Vote;
+import com.javaops.restaurant.model.Vote;
 import com.javaops.restaurant.repository.VoteRepository;
 import lombok.extern.java.Log;
 import org.junit.After;
@@ -78,12 +78,12 @@ public class VoteRepositoryTest {
 
     @Test
     public void testDataUpdate() {
-        assertThat(repository.findById(id1)).isNotNull();
-        assertThat(repository.findById(id2)).isNotNull();
-        assertThat(repository.findById(id3)).isNotNull();
-        assertThat(repository.findById(id4)).isNotNull();
+        assertThat(repository.findOne(id1)).isNotNull();
+        assertThat(repository.findOne(id2)).isNotNull();
+        assertThat(repository.findOne(id3)).isNotNull();
+        assertThat(repository.findOne(id4)).isNotNull();
 
-        Vote vote = repository.findById(id1);
+        Vote vote = repository.findOne(id1);
         assertThat(vote).isNotNull();
         assertThat(vote.getUserId()).isEqualTo(USER_ID_1);
         assertThat(vote.getRestaurantId()).isEqualTo(RESTAURANT_ID_1);
