@@ -7,7 +7,6 @@ import com.javaops.restaurant.repository.RestaurantRepository;
 import com.javaops.restaurant.repository.UserRepository;
 import com.javaops.restaurant.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/votes")
-public class VoteController extends EntityController<Vote>{
+public class VoteController {
     private final VoteRepository repository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
@@ -33,9 +32,9 @@ public class VoteController extends EntityController<Vote>{
         this.userRepository = userRepository;
     }
 
-    @Override
-    protected MongoRepository<Vote, String> getRepository() {
-        return repository;
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    protected List<Vote> getAll() {
+        return repository.findAll();
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

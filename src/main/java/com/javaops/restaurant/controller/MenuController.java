@@ -37,18 +37,6 @@ public class MenuController extends EntityController<Menu>{
         return repository;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Menu create(@RequestBody Menu menu) {
-        validateMenu(menu);
-        return getRepository().save(menu);
-    }
-
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Menu update(@PathVariable final String id, @RequestBody final Menu menu) {
-        validateMenu(menu);
-        return getRepository().save(menu);
-    }
-
     @GetMapping(params = {"restaurant_id"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Menu> getByRestaurant(@RequestParam("restaurant_id") String restaurantId) {
         return repository.findByRestaurantId(restaurantId);
@@ -66,7 +54,7 @@ public class MenuController extends EntityController<Menu>{
     }
 
     // TODO implement custom RuntimeException
-    private void validateMenu(final Menu menu) {
+    protected void validateEntity(final Menu menu) {
         if(menu == null) {
             throw new RuntimeException();
         }

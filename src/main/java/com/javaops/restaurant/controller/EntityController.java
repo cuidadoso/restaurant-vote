@@ -45,7 +45,7 @@ public abstract class EntityController<T> {
         getRepository().delete(id);
     }
 
-    private void validateEntity(final T entity) throws RuntimeException {
+    protected void validateEntity(final T entity) throws RuntimeException {
         if(entity == null) {
             // TODO implement custom RuntimeException
             throw new RuntimeException();
