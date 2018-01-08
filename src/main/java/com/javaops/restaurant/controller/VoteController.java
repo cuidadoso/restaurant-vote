@@ -11,7 +11,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/votes")
@@ -34,16 +38,28 @@ public class VoteController extends EntityController<Vote>{
         return repository;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Vote create(@RequestBody Vote vote) {
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Vote vote(@RequestBody final Vote vote) {
         validateVote(vote);
-        return getRepository().save(vote);
-    }
-
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Vote update(@PathVariable final String id, @RequestBody final Vote vote) {
-        validateVote(vote);
-        return getRepository().save(vote);
+        List<Vote> votes = repository.findByUserIdAndRestaurantId(vote.getUserId(), vote.getRestaurantId());
+        if(votes.isEmpty()) {
+            vote.setId(null);
+            vote.setTime(LocalDateTime.now());
+            return repository.save(vote);
+        }
+        LocalDate nowDate = LocalDate.now();
+        LocalTime deadLineTime = LocalTime.of(11, 00);
+        List<Vote> filteredVotes = votes.stream()
+                                        .filter(v -> {
+                                            LocalDateTime dateTime = v.getTime();
+                                            return dateTime.toLocalDate().equals(nowDate) &&
+                                                   dateTime.toLocalTime().isBefore(deadLineTime);
+                                        })
+                                        .collect(Collectors.toList());
+        if(!filteredVotes.isEmpty()) {
+            repository.delete(filteredVotes);
+        }
+        return null;
     }
 
     @GetMapping(params = {"user_id"}, produces = MediaType.APPLICATION_JSON_VALUE)
