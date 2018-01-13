@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,19 +20,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import static com.javaops.restaurant.Constants.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Log
 public class MenuRepositoryTest {
-    private final String RESTAURANT_ID_1 = "111111";
-    private final String RESTAURANT_ID_2 = "222222";
-    private final LocalDate DATE_TODAY = LocalDate.now();
-    private final LocalDate DATE_YESTERDAY = DATE_TODAY.minusDays(1);
-    private final String DISH_NAME_1 = "Soup Tomato";
-    private final String DISH_NAME_2 = "Potato Free";
-    private final Long PRICE_1 = 1000L;
-    private final Long PRICE_2 = 900L;
-
     @Autowired
     private MenuRepository repository;
     @Autowired
@@ -46,6 +38,7 @@ public class MenuRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> Menu test start.");
+        repository.deleteAll();
         Dish dish1 = Dish.builder()
                          .name(DISH_NAME_1)
                          .price(PRICE_1)

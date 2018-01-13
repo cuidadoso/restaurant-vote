@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.javaops.restaurant.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -21,13 +21,6 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest
 @Log
 public class VoteRepositoryTest {
-    private final String USER_ID_1 = "U1";
-    private final String USER_ID_2 = "U2";
-    private final String RESTAURANT_ID_1 = "R1";
-    private final String RESTAURANT_ID_2 = "R2";
-    private LocalDateTime TIME_TODAY = LocalDateTime.now();
-    private LocalDateTime TIME_YESTERDAY = TIME_TODAY.minusDays(1);
-
     @Autowired
     private VoteRepository repository;
     private String id1;
@@ -38,6 +31,7 @@ public class VoteRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> Vote test start.");
+        repository.deleteAll();
         Vote vote1 = Vote.builder()
                          .userId(USER_ID_1)
                          .restaurantId(RESTAURANT_ID_1)

@@ -13,19 +13,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static com.javaops.restaurant.Constants.*;
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Log
 public class DishRepositoryTest {
-    private final String DISH_NAME_1 = "Soup Tomato";
-    private final String DISH_NAME_2 = "Potato Free";
-    private final String DISH_NAME_3 = "Soup With Meat";
-    private final String SEARCH_WORD = "Meat";
-    private final Long PRICE_1 = 1000L;
-    private final Long PRICE_2 = 900L;
-
     @Autowired
     private DishRepository repository;
     private String id1;
@@ -34,6 +28,7 @@ public class DishRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> Dish test start.");
+        repository.deleteAll();
         Dish dish1 = Dish.builder()
                          .name(DISH_NAME_1)
                          .price(PRICE_1)
@@ -68,7 +63,7 @@ public class DishRepositoryTest {
         dishA.setName(DISH_NAME_3);
         repository.save(dishA);
 
-        Dish dishB = repository.findByNameContains(SEARCH_WORD)
+        Dish dishB = repository.findByNameContains(SEARCH_WORD_DISH)
                                .get(0);
         assertThat(dishB).isNotNull();
         assertThat(dishB.getName()).isEqualTo(DISH_NAME_3);

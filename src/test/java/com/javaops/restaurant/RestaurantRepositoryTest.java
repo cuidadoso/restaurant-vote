@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static com.javaops.restaurant.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -20,13 +21,6 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest
 @Log
 public class RestaurantRepositoryTest {
-    private final String RESTAURANT_NAME_1 = "Restaurant1";
-    private final String RESTAURANT_NAME_2 = "Restaurant2";
-    private final String RESTAURANT_ADDRESS_1 = "Addres1";
-    private final String RESTAURANT_ADDRESS_2 = "Address2";
-    private final String RESTAURANT_NAME_UPD = "Restaurant1 Updated";
-    private final String RESTAURANT_ADDRESS_UPD = "Address2 Updated";
-    private final String SEARCH_WORD = "Updated";
 
     @Autowired
     private RestaurantRepository repository;
@@ -36,6 +30,7 @@ public class RestaurantRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> Restaurant test start.");
+        repository.deleteAll();
         Restaurant restaurant1 = Restaurant.builder()
                                            .name(RESTAURANT_NAME_1)
                                            .address(RESTAURANT_ADDRESS_1)
@@ -70,7 +65,7 @@ public class RestaurantRepositoryTest {
         restaurantA.setName(RESTAURANT_NAME_UPD);
         repository.save(restaurantA);
 
-        Restaurant restaurantB = repository.findByNameContains(SEARCH_WORD)
+        Restaurant restaurantB = repository.findByNameContains(SEARCH_WORD_RESTAURANT)
                                            .get(0);
         assertThat(restaurantB).isNotNull();
         assertThat(restaurantB.getName()).isEqualTo(RESTAURANT_NAME_UPD);
@@ -90,7 +85,7 @@ public class RestaurantRepositoryTest {
         restaurantD.setAddress(RESTAURANT_ADDRESS_UPD);
         repository.save(restaurantD);
 
-        Restaurant restaurantE = repository.findByAddressContains(SEARCH_WORD)
+        Restaurant restaurantE = repository.findByAddressContains(SEARCH_WORD_RESTAURANT)
                                            .get(0);
         assertThat(restaurantE.getName()).as("check %s's name", restaurantE.getName())
                                          .isEqualTo(RESTAURANT_NAME_2);

@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static com.javaops.restaurant.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -20,13 +21,6 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest
 @Log
 public class UserRepositoryTest {
-    private final String NAME_1 = "UserName1";
-    private final String EMAIL_1 = "user1@mail";
-    private final String PASSWORD_1 = "pass1";
-    private final String NAME_2 = "UserName2";
-    private final String EMAIL_2 = "user2@mail";
-    private final String PASSWORD_2 = "pass2";
-
     @Autowired
     private UserRepository repository;
     private String id1;
@@ -35,6 +29,7 @@ public class UserRepositoryTest {
     @Before
     public void setUp() {
         log.info("--> User test start.");
+        repository.deleteAll();
         User user1 = User.builder()
                          .name(NAME_1)
                          .email(EMAIL_1)
