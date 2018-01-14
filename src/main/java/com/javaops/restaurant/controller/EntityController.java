@@ -29,10 +29,9 @@ public abstract class EntityController<T> {
         return getRepository().save(entity);
     }
 
-    @PutMapping(value = "/{id}",
-                consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public T update(@PathVariable final String id, @RequestBody final T entity) {
+    public T update(@RequestBody final T entity) {
         validateEntity(entity);
         return getRepository().save(entity);
     }
