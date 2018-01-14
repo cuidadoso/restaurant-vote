@@ -5,11 +5,12 @@ import com.javaops.restaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
-public class UserController extends EntityController<User>{
+public class UserController extends EntityController<User> {
     private final UserRepository repository;
 
     @Autowired
@@ -24,7 +25,7 @@ public class UserController extends EntityController<User>{
 
     @GetMapping(params = {"email"},
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getByEmail(@RequestParam("email") String email) {
-        return repository.findByEmail(email);
+    public ResponseEntity<User> getByEmail(@RequestParam("email") String email) {
+        return getOneResponse(repository.findByEmail(email));
     }
 }

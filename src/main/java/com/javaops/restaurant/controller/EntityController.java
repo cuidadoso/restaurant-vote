@@ -1,53 +1,38 @@
 package com.javaops.restaurant.controller;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Collection;
 
-public abstract class EntityController<T> {
-
-    protected abstract MongoRepository<T, String> getRepository();
+public abstract class EntityController<T>  extends AbstractResponseHelper<T> {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    protected List<T> getAll() {
-        return getRepository().findAll();
+    protected ResponseEntity<Collection<T>> getAll() {
+        return getListResponse(getRepository().findAll());
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public T get(@PathVariable("id") final String id) {
-        T entity = getRepository().findOne(id);
-        validateEntity(entity);
-        return getRepository().findOne(id);
+    public ResponseEntity<T> get(@PathVariable("id") final String id) {
+        return getOneResponse(getRepository().findOne(id));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
-    public T create(@RequestBody T entity) {
-        validateEntity(entity);
-        return getRepository().save(entity);
+    public ResponseEntity<T> create(@RequestBody T entity) {
+        return createResponse(entity);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    public T update(@RequestBody final T entity) {
-        validateEntity(entity);
-        return getRepository().save(entity);
+    public ResponseEntity<T> update(@RequestBody final T entity) {
+        return updateResponse(entity);
     }
 
     @DeleteMapping(value = "/{id}",
                    produces = MediaType.APPLICATION_JSON_VALUE)
-    public void delete(@PathVariable final String id) {
-        T entity = getRepository().findOne(id);
-        validateEntity(entity);
-        getRepository().delete(id);
-    }
-
-    protected void validateEntity(final T entity) throws RuntimeException {
-        if(entity == null) {
-            // TODO implement custom RuntimeException
-            throw new RuntimeException();
-        }
+    public ResponseEntity<T> delete(@PathVariable final String id) {
+        return deleteResponse(getRepository().findOne(id));
     }
 }

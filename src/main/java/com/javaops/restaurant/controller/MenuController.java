@@ -9,16 +9,18 @@ import com.javaops.restaurant.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/menus")
-public class MenuController extends EntityController<Menu>{
+public class MenuController extends EntityController<Menu> {
     private final MenuRepository repository;
     private final RestaurantRepository restaurantRepository;
     private final DishRepository dishRepository;
@@ -38,33 +40,32 @@ public class MenuController extends EntityController<Menu>{
     }
 
     @GetMapping(params = {"restaurant_id"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Menu> getByRestaurant(@RequestParam("restaurant_id") String restaurantId) {
-        return repository.findByRestaurantId(restaurantId);
+    public ResponseEntity<Collection<Menu>> getByRestaurant(@RequestParam("restaurant_id") String restaurantId) {
+        return getListResponse(repository.findByRestaurantId(restaurantId));
     }
 
     @GetMapping(params = {"date"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Menu> getByDate(@RequestParam("date") LocalDate date) {
-        return repository.findByDate(date);
+    public ResponseEntity<Collection<Menu>> getByDate(@RequestParam("date") LocalDate date) {
+        return  getListResponse(repository.findByDate(date));
     }
 
     @GetMapping(params = {"restaurant_id", "date"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Menu getByRestaurantAndDate(@RequestParam("restaurant_id") String restaurantId,
-                                             @RequestParam("date") LocalDate date) {
-        return repository.findByRestaurantIdAndDate(restaurantId, date);
+    public ResponseEntity<Menu> getByRestaurantAndDate(@RequestParam("restaurant_id") String restaurantId,
+                                                       @RequestParam("date") LocalDate date) {
+        return getOneResponse(repository.findByRestaurantIdAndDate(restaurantId, date));
     }
 
-    // TODO implement custom RuntimeException
-    protected void validateEntity(final Menu menu) {
+    protected boolean validateEntity(final Menu menu) {
         if(menu == null) {
-            throw new RuntimeException();
+            return false;
         }
         String restaurantId = menu.getRestaurantId();
         if(restaurantId == null) {
-            throw new RuntimeException();
+            return false;
         }
         Restaurant restaurant = restaurantRepository.findOne(menu.getRestaurantId());
         if(restaurant == null) {
-            throw new RuntimeException();
+            return false;
         }
         List<Dish> dishes = menu.getDishes();
         if(dishes == null) {
@@ -78,11 +79,13 @@ public class MenuController extends EntityController<Menu>{
                 } else {
                     Dish dish = dishRepository.findOne(d.getId());
                     if(dish == null) {
+                        // TODO replace with return false
                         throw new RuntimeException();
                     }
                 }
             });
             dishRepository.save(_dishes);
         }
+        return true;
     }
 }
