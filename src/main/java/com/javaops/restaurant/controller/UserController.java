@@ -4,9 +4,12 @@ import com.javaops.restaurant.model.User;
 import com.javaops.restaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
@@ -27,5 +30,16 @@ public class UserController extends EntityController<User> {
                 produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getByEmail(@RequestParam("email") String email) {
         return getOneResponse(repository.findByEmail(email));
+    }
+
+    @DeleteMapping(value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> delete(@PathVariable final String id, Principal principal) {
+        User currentUser = repository.findByEmail(principal.getName());
+        if (id.equals(currentUser.getId())) {
+            return deleteResponse(repository.findOne(id));
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }

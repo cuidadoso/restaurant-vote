@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Collection;
 
 public abstract class EntityController<T>  extends AbstractResponseHelper<T> {
@@ -32,7 +33,7 @@ public abstract class EntityController<T>  extends AbstractResponseHelper<T> {
 
     @DeleteMapping(value = "/{id}",
                    produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<T> delete(@PathVariable final String id) {
+    public ResponseEntity<T> delete(@PathVariable final String id, Principal principal) {
         return deleteResponse(getRepository().findOne(id));
     }
 }
