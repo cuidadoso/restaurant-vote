@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Document(collection="menus")
@@ -26,10 +27,12 @@ public class Menu {
     @Getter
     @Setter
     @NonNull
-    private LocalDate date;
+    @Builder.Default
+    private LocalDate date = LocalDate.now();
     @DBRef
     @Getter
     @Setter
     @NonNull
-    private List<Dish> dishes;
+    @Builder.Default
+    private List<Dish> dishes = Collections.emptyList();
 }

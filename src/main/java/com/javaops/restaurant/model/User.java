@@ -38,6 +38,11 @@ public class User implements UserDetails {
     @NonNull
     @Builder.Default
     private boolean enabled = true;
+    @Getter
+    @Setter
+    @NonNull
+    @Builder.Default
+    private Role role = Role.USER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -42,6 +42,7 @@ public class InitData implements CommandLineRunner {
                          .name(NAME_1)
                          .email(EMAIL_1)
                          .password(PASSWORD_1)
+                         .role(Role.ADMIN)
                          .build();
         User user2 = User.builder()
                          .name(NAME_2)

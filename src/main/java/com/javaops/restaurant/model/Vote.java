@@ -28,5 +28,6 @@ public class Vote {
     @Getter
     @Setter
     @NonNull
-    private LocalDateTime time;
+    @Builder.Default
+    private LocalDateTime time = LocalDateTime.now();
 }
