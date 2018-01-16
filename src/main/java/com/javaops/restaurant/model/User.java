@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="users")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -12,7 +13,8 @@ public class User {
     @Id
     @Getter
     @Setter
-    private String id;
+    @Builder.Default
+    private String id = null;
     @Getter
     @Setter
     @NonNull
@@ -25,9 +27,9 @@ public class User {
     @Setter
     @NonNull
     private String password;
-
-    @Builder
-    public User(final String name, final String email, final String password) {
-        this(null, name, email, password);
-    }
+    @Getter
+    @Setter
+    @NonNull
+    @Builder.Default
+    private boolean enabled = true;
 }

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Document(collection="votes")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -14,7 +15,8 @@ public class Vote {
     @Id
     @Getter
     @Setter
-    private String id;
+    @Builder.Default
+    private String id = null;
     @Getter
     @Setter
     @NonNull
@@ -27,9 +29,4 @@ public class Vote {
     @Setter
     @NonNull
     private LocalDateTime time;
-
-    @Builder
-    public Vote(final String userId, final String restaurantId, final LocalDateTime time) {
-        this(null, userId, restaurantId, time);
-    }
 }

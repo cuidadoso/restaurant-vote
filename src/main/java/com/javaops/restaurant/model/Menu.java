@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Document(collection="menus")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -16,7 +17,8 @@ public class Menu {
     @Id
     @Getter
     @Setter
-    private String id;
+    @Builder.Default
+    private String id = null;
     @Getter
     @Setter
     @NonNull
@@ -30,8 +32,4 @@ public class Menu {
     @Setter
     @NonNull
     private List<Dish> dishes;
-    @Builder
-    public Menu(final String restaurantId, final LocalDate date, final List<Dish> dishes) {
-        this(null, restaurantId, date, dishes);
-    }
 }

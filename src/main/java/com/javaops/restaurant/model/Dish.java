@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="dishes")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -12,7 +13,8 @@ public class Dish {
     @Id
     @Getter
     @Setter
-    private String id;
+    @Builder.Default
+    private String id = null;
     @Getter
     @Setter
     @NonNull
@@ -21,9 +23,4 @@ public class Dish {
     @Setter
     @NonNull
     private Long price;
-
-    @Builder
-    public Dish(final String name, final Long price) {
-        this(null, name, price);
-    }
 }
