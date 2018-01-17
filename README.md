@@ -58,11 +58,13 @@ POST) http://localhost:8080/api/v1/restaurants   - create new restaurants (entit
 (PUT) http://localhost:8080/api/v1/votes         - create/delete vote (entity in request body)
 
 
-8. CURL examples to get entities, for not authorized users access denied
+8. CURL examples to get entities, for not authorized users access is not denied only for users url ((GET) http://localhost:8080/api/v1/users, (POST) http://localhost:8080/api/v1/users)
 
-curl -i -H "Accept: application/json" -X GET http://localhost:8080/api/v1/users         - get all users without authorization
+curl -i -H "Accept: application/json" -X GET http://localhost:8080/api/v1/users         - get all users without authorization (access denied)
 
-curl -i -H "Accept: application/json" -X GET http://localhost:8080/api/v1/users/1       - get user with id = 1 without authorization
+curl -i -H "Accept: application/json" -X GET http://localhost:8080/api/v1/users/1       - get user with id = 1 without authorization (access denied)
+
+curl -d "@user.json" -i -H "Content-Type: application/json" -H "Accept: application/json" -X POST http://localhost:8080/api/v1/users - create user from user.json file (access not denied)
 
 9. Authorization.
 
@@ -70,11 +72,13 @@ curl -X POST --user "javaops:secret" -d "grant_type=password&username=user1@mail
 
 Response with token: {"access_token":"cc01f936-a8bc-404e-8adc-d131ee47cdb3","token_type":"bearer","refresh_token":"4a476b2a-2e35-4b53-90a7-b31aee15f1fd","expires_in":3599,"scope":"read write"}
 
-10. Authorized user
+10. Authorized user with ADMIN role (user1@mail) can create/update/delete entities. Authorized user with USER role (user2@mail) can update/delete itself user and vote for restaurants.
 
 curl -i -H "Accept: application/json" -H "Authorization: Bearer cc01f936-a8bc-404e-8adc-d131ee47cdb3" -X GET http://localhost:8080/api/v1/users - get all users
 
 curl -d "@restaurant.json" -i -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer cc01f936-a8bc-404e-8adc-d131ee47cdb3" -X POST http://localhost:8080/api/v1/restaurants - create new restaurant
+
+curl -d "@vote.json" -i -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: Bearer cc01f936-a8bc-404e-8adc-d131ee47cdb3" -X PUT http://localhost:8080/api/v1/vote - create/delete vote
 
 11. After starting application same test data are created in database/
 
