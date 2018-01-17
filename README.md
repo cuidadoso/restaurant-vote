@@ -25,7 +25,7 @@ Restaurant vote project.
 
 (GET) http://localhost:8080/api/v1/restaurants/2 - get restaurant with id = 2
 
-POST) http://localhost:8080/api/v1/restaurants   - create new restaurants (entity in request body)
+(POST) http://localhost:8080/api/v1/restaurants   - create new restaurants (entity in request body)
 
 (PUT) http://localhost:8080/api/v1/restaurants   - update new restaurants (entity in request body)
 
