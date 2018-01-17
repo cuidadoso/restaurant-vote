@@ -33,7 +33,7 @@ public class UserController extends EntityController<User> {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(User entity, Principal principal) {
+    public ResponseEntity<User> create(@RequestBody User entity, Principal principal) {
         return createResponse(entity);
 
     }

@@ -27,7 +27,7 @@ public abstract class EntityController<T>  extends AbstractResponseHelper<T> {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<T> create(T entity, Principal principal) {
+    public ResponseEntity<T> create(@RequestBody T entity, Principal principal) {
         User currentUser = userRepository.findByEmail(principal.getName());
         if(Role.ADMIN.equals(currentUser.getRole())) {
             return createResponse(entity);
