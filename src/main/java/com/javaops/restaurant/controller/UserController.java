@@ -32,6 +32,22 @@ public class UserController extends EntityController<User> {
         return getOneResponse(repository.findByEmail(email));
     }
 
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> create(User entity, Principal principal) {
+        return createResponse(entity);
+
+    }
+
+    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> update(@RequestBody final User entity, Principal principal) {
+        User currentUser = repository.findByEmail(principal.getName());
+        if(entity.getId().equals(currentUser.getId())) {
+            return updateResponse(entity);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> delete(@PathVariable final String id, Principal principal) {
