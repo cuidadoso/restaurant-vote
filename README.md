@@ -83,3 +83,5 @@ curl -d "@vote.json" -i -H "Content-Type: application/json" -H "Accept: applicat
 11. After starting application same test data are created in database/
 
 12. As database used embedded MongoDB, that start with application in memory.
+
+PS: TODO Create/Update objects with json file dsn't work.
